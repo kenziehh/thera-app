@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { Text, TextInput } from 'react-native';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import "../global.css"
@@ -10,12 +11,25 @@ import "../global.css"
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Figtree: require('../assets/fonts/Figtree-Regular.ttf'),
   });
 
+  if (loaded) {
+    (Text as any).defaultProps = {
+      ...(Text as any).defaultProps,
+      allowFontScaling: false,
+      style: [{ fontFamily: 'Figtree' }],
+    };
+
+    (TextInput as any).defaultProps = {
+      ...(TextInput as any).defaultProps,
+      allowFontScaling: false,
+      style: [{ fontFamily: 'Figtree' }],
+    };
+  }
+
   if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+    return null; // atau tambahkan splash/loading screen
   }
 
   return (
@@ -23,6 +37,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
