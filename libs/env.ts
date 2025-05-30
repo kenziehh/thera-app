@@ -1,0 +1,1 @@
+export const BASE_URL = "https://pt-mencari-cinta-sejati-api.bccdev.id/api/v1/"
