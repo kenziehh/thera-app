@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-const OverallStatus = () => {
+const OverallStatus = ({ className }: { className?: string }) => {
   const percentage = 70;
 
   return (
-    <View className="bg-white rounded-2xl shadow-md p-4 mx-4 my-6 flex-row items-center">
+    <View className={`${className} bg-white rounded-2xl shadow-md p-4 mx-4 my-6 flex-row items-center`}>
       <AnimatedCircularProgress
         size={80}
         width={8}
@@ -15,7 +15,7 @@ const OverallStatus = () => {
         backgroundColor="#e5e7eb" // Tailwind gray-200
         rotation={90}
         lineCap="round"
-        
+
       >
         {() => <Text className="text-green-500 font-bold text-base">{percentage}%</Text>}
       </AnimatedCircularProgress>
