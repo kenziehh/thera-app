@@ -1,6 +1,6 @@
 import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import { format, addDays } from 'date-fns'
+import { format, addDays, parseISO } from 'date-fns'
 import ScheduleCard from '../components/ScheduleCard'
 import { AuthService } from '@/features/auth/services/auth.service'
 import { useQuery } from '@tanstack/react-query'
@@ -21,16 +21,16 @@ export default function ScheduleContainer() {
     })
 
     const { data: schedulePerDay, isLoading: isSchedulePerDayLoading } = useQuery({
-        queryKey: ['scheduleToday',selectedDate],
+        queryKey: ['scheduleToday', selectedDate],
         queryFn: async () => AppointmentService.getAppointments(profile?.id ?? '', selectedDate, selectedDate),
         enabled: !!profile?.id,
     })
 
-    console.log(schedulePerDay)
 
 
-    const selectedSchedule = (schedulePerDay ?? []).filter(d => d.appointment_date === selectedDate)
-
+    const selectedSchedule = (schedulePerDay ?? []).filter(d =>
+        format(parseISO(d.appointment_date), 'yyyy-MM-dd') === selectedDate
+    )
     return (
         <SafeAreaView>
             <View className='flex flex-col gap-6'>
@@ -59,8 +59,8 @@ export default function ScheduleContainer() {
                     </View>
                 </ScrollView>
                 {selectedSchedule.length > 0 ? (
-                    selectedSchedule.map((item, idx) => (
-                        <ScheduleCard
+                    selectedSchedule.map((item, idx) => {
+                        return <ScheduleCard
                             key={idx}
                             schedule={{
                                 time: item.appointment_date,
@@ -69,11 +69,12 @@ export default function ScheduleContainer() {
                                 type: item.type
                             }}
                         />
-                    ))
+                    }
+                    )
                 ) : (
                     <View className='px-6'>
                         <Text className='text-center text-gray-400 mt-10'>
-                            No schedule for this date.
+                            No appointments scheduled for {format(new Date(selectedDate), 'EEEE, MMMM dd, yyyy')}.
                         </Text>
                     </View>
                 )}

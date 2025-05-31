@@ -1,6 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react'
-import { Alert, FlatList, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react';
+import {
+    Alert,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import ChatBubble from '../components/ChatBubble';
 import { ChatBotService } from '../services/Chatbot.service';
 
@@ -8,9 +18,10 @@ export default function ChatBotContainer() {
     const [messages, setMessages] = useState([
         { id: '1', text: 'Hai, aku Thera AI. Apa ada yang mau kamu ceritakan?', isUser: false },
     ]);
-    const [channelId, setChannelId] = useState<string | null>(null)
+    const [channelId, setChannelId] = useState<string | null>(null);
     const [input, setInput] = useState('');
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+
     const sendMessage = async () => {
         if (!input.trim()) return;
 
@@ -21,7 +32,7 @@ export default function ChatBotContainer() {
         };
 
         const thinkingMsg = {
-            id: 'thinking', // ID tetap agar bisa dikenali dan dihapus nanti
+            id: 'thinking',
             text: 'Sedang berpikir...',
             isUser: false,
             isThinking: true,
@@ -45,9 +56,7 @@ export default function ChatBotContainer() {
                 isUser: false,
             };
 
-            setMessages(prev =>
-                [...prev.filter(msg => msg.id !== 'thinking'), botMsg]
-            );
+            setMessages(prev => [...prev.filter(msg => msg.id !== 'thinking'), botMsg]);
         } catch (error: any) {
             Alert.alert("Error", error.message ?? "Terjadi kesalahan");
             setMessages(prev => prev.filter(msg => msg.id !== 'thinking'));
@@ -58,33 +67,36 @@ export default function ChatBotContainer() {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <FlatList
-                data={messages}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => <ChatBubble message={item.text} isUser={item.isUser} />}
-                contentContainerStyle={styles.chat}
-            />
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    value={input}
-                    onChangeText={setInput}
-                    placeholder="Type your message..."
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+            >
+                <FlatList
+                    data={messages}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <ChatBubble message={item.text} isUser={item.isUser} />
+                    )}
+                    contentContainerStyle={styles.chat}
                 />
-                <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-                    <Ionicons name="send" size={20} color="#fff" />
-                </TouchableOpacity>
-            </View>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        value={input}
+                        onChangeText={setInput}
+                        placeholder="Type your message..."
+                    />
+                    <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+                        <Ionicons name="send" size={20} color="#fff" />
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
-    )
+    );
 }
 
-
 const styles = StyleSheet.create({
-    wrapper: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
     chat: {
         padding: 10,
         paddingBottom: 80,
@@ -92,10 +104,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         padding: 10,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
         backgroundColor: '#fff',
         alignItems: 'center',
         borderTopColor: '#ccc',

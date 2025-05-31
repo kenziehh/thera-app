@@ -13,7 +13,7 @@ const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth * 0.85;
 
 const ScheduleCarousel = ({ schedule }: { schedule: Appointment[] }) => {
-
+    
 
     const renderCard = ({ item }: { item: Appointment }) => (
         <View

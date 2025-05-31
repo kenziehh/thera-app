@@ -32,7 +32,7 @@ export default function MoodContainer() {
     }, [selectedMood])
 
     const { data: weeklyMoodHistory, isLoading: isWeeklyMoodHistoryLoading } = useQuery({
-        queryKey: ['moodWeeklyHistory'],
+        queryKey: ['moodWeeklyHistory', selectedMood],
         queryFn: async () => MoodService.getMoodWeeklyHistory(),
     })
 
