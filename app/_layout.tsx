@@ -9,10 +9,12 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import "../global.css"
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import ReactQueryProvider from '@/components/ReactQueryProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const { isLoading, isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const segments = useSegments();
   const router = useRouter();
   const [loaded] = useFonts({
@@ -45,6 +47,7 @@ export default function RootLayout() {
         router.replace('/'); // arahkan ke home jika sudah login
       }
     }
+    checkAuth();
   }, [isLoading, isAuthenticated, segments]);
 
   if (!loaded) {
@@ -53,12 +56,13 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
+      <ReactQueryProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ReactQueryProvider>
     </ThemeProvider>
   );
 }

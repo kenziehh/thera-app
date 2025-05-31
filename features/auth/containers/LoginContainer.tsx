@@ -19,11 +19,13 @@ import { z } from 'zod';
 import { SignInFormData, signInSchema } from '../services/schema';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthService } from '../services/auth.service';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function LoginContainer() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const { login } = useAuthStore()
 
     const {
         control,
@@ -43,10 +45,15 @@ export default function LoginContainer() {
         try {
             setIsLoading(true);
 
-            await AuthService.login(data.email, data.password)
+            const token = await AuthService.login(data.email, data.password)
 
-            Alert.alert('Success', 'Form submitted successfully! Check console for data.');
-            router.push('/'); 
+            Alert.alert('Success', 'Login Success');
+            if (token) {
+                await login(token);
+            } else {
+                throw new Error('Token is null');
+            }
+            router.replace('/');
         } catch (error) {
             console.error('Submission error:', error);
             console.log(JSON.stringify(error));

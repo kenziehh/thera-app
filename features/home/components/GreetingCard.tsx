@@ -1,13 +1,12 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, View, Text, Pressable, SafeAreaView } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { AuthService } from '@/features/auth/services/auth.service';
 import { Link } from 'expo-router';
 
-export default function GreetingCard({ name, photo}: {name:string,photo?: string}) {
+export default function GreetingCard({ name, photo }: { name: string, photo?: string }) {
+
+    
     return (
         <View className='flex flex-row w-full justify-between px-6 items-center'>
             <View className='flex flex-col gap-3'>
@@ -20,7 +19,7 @@ export default function GreetingCard({ name, photo}: {name:string,photo?: string
                     })()}
                 </Text>
                 <Text className='text-2xl font-bold text-black-50'>
-                    {name ??" User"}
+                    {name ?? " User"}
                 </Text>
             </View>
             <View className='flex flex-row gap-2 items-center'>
@@ -32,14 +31,16 @@ export default function GreetingCard({ name, photo}: {name:string,photo?: string
                         />
                     </Pressable>
                 </Link>
-                <Image
-                    source={
-                        photo
-                            ? { uri: photo }
-                            : require('@/assets/images/profile-placeholder.png')
-                    }
-                    style={{ width: 48, height: 48, borderRadius: 999 }}
-                />
+                <Pressable onPress={() => AuthService.logout()}>
+                    <Image
+                        source={
+                            photo
+                                ? { uri: photo }
+                                : require('@/assets/images/profile-placeholder.png')
+                        }
+                        style={{ width: 48, height: 48, borderRadius: 999 }}
+                    />
+                </Pressable>
             </View>
         </View>
     )

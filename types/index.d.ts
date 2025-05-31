@@ -22,3 +22,14 @@ export type Doctor = {
     created_at: string;
     updated_at: string;
 };
+
+export type Mood = {
+    id: number;
+    doctor_id: string;
+    scale: number;
+    created_at: string;
+};
+
+export type MonthlyMood = {
+    [month: string]: number;
+};

@@ -1,11 +1,28 @@
 import OverallStatus from '@/features/home/components/OverallStatus'
-import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Alert, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MoodJourney from './MoodJourney'
+import { MoodService } from '../service/mood.service'
 
 export default function MoodContainer() {
     const [selectedMood, setSelectedMood] = React.useState<number | null>(null)
+
+    useEffect(() => {
+        const postDailyMood = async () => {
+            try {
+                if (selectedMood !== null) {
+                    await MoodService.postMoodThisDay(selectedMood)
+                    Alert.alert("Success", "Your mood has been recorded for today.")
+                }
+            } catch (error) {
+                Alert.alert("Error", "Failed to post daily mood. Please try again later.")
+                console.error('Error posting daily mood:', error)
+            }
+        }
+        postDailyMood()
+    }, [selectedMood])
+
 
     return (
         <SafeAreaView className="flex-1">
