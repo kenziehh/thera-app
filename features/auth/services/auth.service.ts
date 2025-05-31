@@ -1,23 +1,24 @@
 import { api } from "@/libs/axios";
+import { Doctor } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class AuthService {
     static async getSession() {
-        const response = await api.get('/doctors/login');
-        AsyncStorage.setItem('token', response.data.payload.doctor); 
-        return null;
+        const response = await api.get('/doctors/sessions');
+        console.log(response.data)
+        return response.data.payload.doctor as Doctor;
     }
 
-    static async getToken(){
+    static async getToken() {   
         const token = await AsyncStorage.getItem("token")
         return token
     }
     static async setUser(user: any) {
-        localStorage.setItem('user', JSON.stringify(user));
+        AsyncStorage.setItem('user', JSON.stringify(user));
     }
 
     static async clearUser() {
-        localStorage.removeItem('user');
+        AsyncStorage.removeItem('user');
     }
 
     static async isAuthenticated() {
@@ -26,14 +27,17 @@ export class AuthService {
     }
 
     static async login(email: string, password: string) {
+
         try {
             const response = await api.post('/doctors/login', {
                 email,
                 password
             });
             AsyncStorage.setItem('token', response.data.payload.access_token);
-
+           
+            return response.data.payload.access_token as string;
         } catch (error) {
+
             console.error('Login error:', error);
             throw new Error('Login failed');
         }

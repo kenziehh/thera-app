@@ -1,6 +1,7 @@
 import axios, { AxiosError, CreateAxiosDefaults } from "axios";
 import { BASE_URL } from "./env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthService } from "@/features/auth/services/auth.service";
 
 const createInstance = (config?: CreateAxiosDefaults) => {
     const instance = axios.create(config);
@@ -8,21 +9,22 @@ const createInstance = (config?: CreateAxiosDefaults) => {
     instance.interceptors.request.use(
         async (config) => {
             let session;
-            
+
             // if (typeof window !== "undefined") {
             //     // Client-side
             //     session = await getSession();
             // } else {
             //     // Server-side
             //     session = await getServerSession(authOptions);
-            // }
+        // }
             // config.headers["x-api-key"] = `Key ${process.env.NEXT_PUBLIC_API_KEY}`;
-            const token = AsyncStorage.getItem("token");
-            if (session) {
-                config.headers[
-                    "Authorization"
-                ] = `Bearer ${token}`;
-            }
+            const token = await AuthService.getToken();
+
+            config.headers[
+                "Authorization"
+            ] = `Bearer ${token}`;
+           
+
 
             if (!config.headers["Content-Type"]) {
                 if (config.data instanceof FormData) {
