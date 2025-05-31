@@ -1,10 +1,10 @@
+import HomeContainer from "@/features/home/containers/HomeContainer";
 
-import HomeWidget from '@/features/home/widgets/HomeWidget';
 
 export default function HomeScreen() {
 
   return (
-    <HomeWidget />
+    <HomeContainer />
   );
 }
 

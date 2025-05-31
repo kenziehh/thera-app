@@ -2,8 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-const OverallStatus = ({ className }: { className?: string }) => {
-  const percentage = 70;
+const OverallStatus = ({ className, percentage, text }: { className?: string, percentage: number, text: string }) => {
 
   return (
     <View className={`${className} bg-white rounded-2xl shadow-md p-4 mx-4 my-6 flex-row items-center`}>
@@ -23,7 +22,7 @@ const OverallStatus = ({ className }: { className?: string }) => {
       <View className="ml-4 flex-1">
         <Text className="text-lg font-semibold text-black">Good!</Text>
         <Text className="text-sm text-gray-500">
-          You're on the right track! Stay positive and remember to take care of yourself.
+          {text}
         </Text>
       </View>
     </View>
