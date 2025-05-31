@@ -54,10 +54,8 @@ export default function LoginContainer() {
                 throw new Error('Token is null');
             }
             router.replace('/');
-        } catch (error) {
-            console.error('Submission error:', error);
-            console.log(JSON.stringify(error));
-            Alert.alert('Error', 'Something went wrong. Please try again.');
+        } catch (error: any) {
+            Alert.alert('Error', error ?? "Unknown error occured");
         } finally {
             setIsLoading(false);
         }

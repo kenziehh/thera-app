@@ -9,7 +9,7 @@ export class AuthService {
         return response.data.payload.doctor as Doctor;
     }
 
-    static async getToken() {   
+    static async getToken() {
         const token = await AsyncStorage.getItem("token")
         return token
     }
@@ -34,19 +34,19 @@ export class AuthService {
                 password
             });
             AsyncStorage.setItem('token', response.data.payload.access_token);
-           
+
             return response.data.payload.access_token as string;
-        } catch (error) {
+        } catch (error: any) {
 
             console.error('Login error:', error);
-            throw new Error('Login failed');
+            throw error.response.data.payload.error.message as string;
         }
     }
     static async logout() {
         try {
             await AsyncStorage.removeItem('token');
             await this.clearUser();
-            
+
         } catch (error) {
             console.error('Logout error:', error);
             throw new Error('Logout failed');

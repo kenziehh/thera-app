@@ -61,6 +61,7 @@ export default function HomeContainer() {
                             </View>
                         )
                     })()}
+                    
                 </View>
                 <NewsWidget />
             </ScrollView>

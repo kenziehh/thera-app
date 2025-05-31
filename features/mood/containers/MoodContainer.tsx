@@ -1,14 +1,18 @@
 import OverallStatus from '@/features/home/components/OverallStatus'
 import React, { useEffect } from 'react'
-import { Alert, ScrollView, Text, View } from 'react-native'
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MoodJourney from './MoodJourney'
 import { MoodService } from '../service/mood.service'
 import { useQuery } from '@tanstack/react-query'
+import { Image } from 'expo-image'
+import { Link, useNavigation } from 'expo-router'
 
 export default function MoodContainer() {
+    const navigation = useNavigation()
+
     const [selectedMood, setSelectedMood] = React.useState<number | null>(null)
-    
+
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const scaleToEmoji = ['😩', '🙁', '😐', '🙂', '😄']
 
@@ -108,6 +112,25 @@ export default function MoodContainer() {
 
                 <MoodJourney />
             </ScrollView>
+            {/* Floating Action Button */}
+            <Link href={"/chatbot"}
+                style={{
+                    position: 'absolute',
+                    bottom: 90,
+                    right: 20,
+                    backgroundColor: '#2563eb',
+                    borderRadius: 50,
+                    padding: 16,
+                    elevation: 6,
+                    zIndex: 9999,
+                }}>
+
+                <Image
+                    source={require('@/assets/images/robot-icon.png')} // Ganti dengan path ikon kamu
+                    style={{ width: 28, height: 28, tintColor: 'white' }}
+                />
+            </Link>
+
         </SafeAreaView>
     )
 }

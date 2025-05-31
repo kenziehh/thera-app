@@ -65,3 +65,20 @@ export type Appointment = {
     created_at: string;
     updated_at: string;
 };
+
+
+export type Channel = {
+    id: string;
+    name: string;
+    doctor: Doctor;
+    created_at: string;
+    updated_at: string;
+}
+export type Message = {
+    id: string;
+    channel: Channel;
+    content: string;
+    role: "User" | "Assistant" | "System";
+    created_at: string;
+    updated_at: string;
+}
