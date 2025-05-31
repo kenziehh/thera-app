@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export default function MoodContainer() {
     const [selectedMood, setSelectedMood] = React.useState<number | null>(null)
-
+    
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const scaleToEmoji = ['😩', '🙁', '😐', '🙂', '😄']
 

@@ -17,6 +17,7 @@ export class AppointmentService {
             from_date: start_date,
             to_date: end_date
         })
+        console.log(response.data)
         return response.data.payload.doctor_appointments as Appointment[];
     }
 

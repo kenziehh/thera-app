@@ -26,6 +26,8 @@ export default function ScheduleContainer() {
         enabled: !!profile?.id,
     })
 
+    console.log(schedulePerDay)
+
 
     const selectedSchedule = (schedulePerDay ?? []).filter(d => d.appointment_date === selectedDate)
 
@@ -56,7 +58,7 @@ export default function ScheduleContainer() {
                         })}
                     </View>
                 </ScrollView>
-                {Array.isArray(selectedSchedule) && selectedSchedule.length > 0 ? (
+                {selectedSchedule.length > 0 ? (
                     selectedSchedule.map((item, idx) => (
                         <ScheduleCard
                             key={idx}
