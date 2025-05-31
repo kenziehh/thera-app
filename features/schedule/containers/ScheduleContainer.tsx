@@ -2,6 +2,9 @@ import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { format, addDays } from 'date-fns'
 import ScheduleCard from '../components/ScheduleCard'
+import { AuthService } from '@/features/auth/services/auth.service'
+import { useQuery } from '@tanstack/react-query'
+import { AppointmentService } from '../services/appointment.service'
 
 export default function ScheduleContainer() {
     const today = new Date()
@@ -9,24 +12,22 @@ export default function ScheduleContainer() {
 
     const [selectedDate, setSelectedDate] = useState(format(today, 'yyyy-MM-dd'))
 
-    const scheduleData = [
-        {
-            date: '2025-06-01',
-            schedule: [
-                { time: '08:00', title: 'Check-up', patient: 'Dr. Hardi', type: "surgery" },
-                { time: '10:00', title: 'Consultation', patient: 'Dr. Siti', type: "consultation" },
-            ]
-        },
-        {
-            date: '2025-06-02',
-            schedule: [
-                { time: '09:00', title: 'Follow-up', patient: 'Dr. Budi', type: "follow-up" },
-                { time: '11:00', title: 'Therapy', patient: 'Dr. Ani', type: "therapy" },
-            ]
+    const { data: profile, isLoading: isProfileLoading } = useQuery({
+        queryKey: ['profile'],
+        queryFn: async () => {
+            const session = await AuthService.getSession()
+            return session
         }
-    ]
+    })
 
-    const selectedSchedule = scheduleData.find(d => d.date === selectedDate)?.schedule || []
+    const { data: schedulePerDay, isLoading: isSchedulePerDayLoading } = useQuery({
+        queryKey: ['scheduleToday',selectedDate],
+        queryFn: async () => AppointmentService.getAppointments(profile?.id ?? '', selectedDate, selectedDate),
+        enabled: !!profile?.id,
+    })
+
+
+    const selectedSchedule = (schedulePerDay ?? []).filter(d => d.appointment_date === selectedDate)
 
     return (
         <SafeAreaView>
@@ -55,15 +56,14 @@ export default function ScheduleContainer() {
                         })}
                     </View>
                 </ScrollView>
-
-                {selectedSchedule.length > 0 ? (
+                {Array.isArray(selectedSchedule) && selectedSchedule.length > 0 ? (
                     selectedSchedule.map((item, idx) => (
                         <ScheduleCard
                             key={idx}
                             schedule={{
-                                time: item.time,
-                                patient: item.patient,
-                                title: item.title,
+                                time: item.appointment_date,
+                                patient: item.patient.full_name,
+                                title: item.type,
                                 type: item.type
                             }}
                         />
