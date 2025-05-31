@@ -33,3 +33,35 @@ export type Mood = {
 export type MonthlyMood = {
     [month: string]: number;
 };
+
+
+export type Patient = {
+    id: string;
+    full_name: string;
+    id_number: string;
+    phone_number: string;
+    address: string;
+    date_of_birth: string;
+    gender: string;
+    height: number;
+    weight: number;
+    blood_type: string;
+    allergies: string;
+    medical_record_number: string;
+    hospital: Hospital;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Appointment = {
+    id: string;
+    doctor: Doctor;
+    patient: Patient;
+    appointment_date: string;
+    start_time: string;
+    end_time: string;
+    status: string;
+    type: string;
+    created_at: string;
+    updated_at: string;
+};

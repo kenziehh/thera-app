@@ -9,6 +9,7 @@ import { ScrollView, Text, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { AuthService } from '@/features/auth/services/auth.service'
 import { MoodService } from '@/features/mood/service/mood.service'
+import { AppointmentService } from '@/features/schedule/services/appointment.service'
 
 export default function HomeContainer() {
     const { data: profile, isLoading: isProfileLoading } = useQuery({
@@ -18,12 +19,17 @@ export default function HomeContainer() {
             return session
         }
     })
+
     const { data: weeklyMoodHistory, isLoading: isWeeklyMoodHistoryLoading } = useQuery({
         queryKey: ['moodWeeklyHistory'],
         queryFn: async () => MoodService.getMoodWeeklyHistory(),
     })
-    const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const scaleToEmoji = ['😩', '🙁', '😐', '🙂', '😄']
+
+    const { data: scheduleToday, isLoading: isScheduleTodayLoading } = useQuery({
+        queryKey: ['scheduleToday'],
+        queryFn: async () => AppointmentService.getAppointments(profile?.id ?? '', new Date().toDateString(), new Date().toDateString()),
+        enabled: !!profile?.id,
+    })
 
     return (
         <SafeAreaView className='flex-1 w-full h-full bg-white-300'>
@@ -31,7 +37,7 @@ export default function HomeContainer() {
                 {!isProfileLoading && (
                     <GreetingCard name={profile?.full_name ?? "User"} />
                 )}
-                <ScheduleCarousel />
+                <ScheduleCarousel schedule={scheduleToday ?? []} />
                 <View className='flex flex-col items-center bg-white-50 rounded-2xl mx-6 my-10'>
                     {weeklyMoodHistory && weeklyMoodHistory.length > 0 && (() => {
                         const totalScale = weeklyMoodHistory.reduce((sum, entry) => sum + entry.scale, 0)
