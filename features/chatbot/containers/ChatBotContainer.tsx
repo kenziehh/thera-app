@@ -19,33 +19,43 @@ export default function ChatBotContainer() {
             text: input,
             isUser: true,
         };
-        let botMsg;
+
+        const thinkingMsg = {
+            id: 'thinking', // ID tetap agar bisa dikenali dan dihapus nanti
+            text: 'Sedang berpikir...',
+            isUser: false,
+            isThinking: true,
+        };
+
+        setMessages(prev => [...prev, newMsg, thinkingMsg]);
+        setInput('');
+        setLoading(true);
+
         try {
-            setLoading(true)
-            const data = await ChatBotService.postChat(input)
-            setChannelId(data.channel?.id ?? "")
+            const data = await ChatBotService.postChat(input);
+            setChannelId(data.channel?.id ?? "");
 
             if (!data.message?.content) {
                 throw new Error("Bot response invalid or missing content.");
             }
 
-            botMsg = {
+            const botMsg = {
                 id: Date.now().toString(),
                 text: data.message.content,
                 isUser: false,
             };
-        } catch (error: any) {
-            console.error("Chatbot error:", error.message); // Ini penting untuk debugging
-            Alert.alert("Error", error.message ?? "Terjadi kesalahan");
-        }
 
-        if (botMsg) {
-            setMessages([...messages, newMsg, botMsg]);
-        } else {
-            setMessages([...messages, newMsg]);
+            setMessages(prev =>
+                [...prev.filter(msg => msg.id !== 'thinking'), botMsg]
+            );
+        } catch (error: any) {
+            Alert.alert("Error", error.message ?? "Terjadi kesalahan");
+            setMessages(prev => prev.filter(msg => msg.id !== 'thinking'));
+        } finally {
+            setLoading(false);
         }
-        setInput('');
     };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList

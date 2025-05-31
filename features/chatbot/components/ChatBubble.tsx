@@ -1,4 +1,3 @@
-// components/ChatBubble.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 0,
     },
     bot: {
-        backgroundColor: '#F2F2F2',
+        backgroundColor: '#FFFFFF',
         alignSelf: 'flex-start',
         borderBottomLeftRadius: 0,
     },
