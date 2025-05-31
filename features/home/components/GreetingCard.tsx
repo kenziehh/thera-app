@@ -3,10 +3,11 @@ import { Pressable, Text, View } from 'react-native';
 
 import { AuthService } from '@/features/auth/services/auth.service';
 import { Link } from 'expo-router';
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 
 export default function GreetingCard({ name, photo }: { name: string, photo?: string }) {
+    const { checkAuth, logout } = useAuthStore()
 
-    
     return (
         <View className='flex flex-row w-full justify-between px-6 items-center'>
             <View className='flex flex-col gap-3'>
@@ -31,7 +32,10 @@ export default function GreetingCard({ name, photo }: { name: string, photo?: st
                         />
                     </Pressable>
                 </Link>
-                <Pressable onPress={() => AuthService.logout()}>
+                <Pressable onPress={async () => {
+                    await logout()
+                    checkAuth()
+                }}>
                     <Image
                         source={
                             photo

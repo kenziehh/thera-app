@@ -46,6 +46,7 @@ export class AuthService {
         try {
             await AsyncStorage.removeItem('token');
             await this.clearUser();
+            
         } catch (error) {
             console.error('Logout error:', error);
             throw new Error('Logout failed');
